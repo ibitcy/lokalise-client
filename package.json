@@ -1,0 +1,38 @@
+{
+  "name": "lokalise-client",
+  "version": "0.0.1",
+  "description": "Client for lokalise.co",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist && tsc --declaration",
+    "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
+    "precommit": "npm run lint && npm run test",
+    "start": "node dist/index.js",
+    "test": "jest --config ./jest.config.json --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibitcy/lokalise-client.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ibitcy/lokalise-client/issues"
+  },
+  "homepage": "https://github.com/ibitcy/lokalise-client#readme",
+  "devDependencies": {
+    "@types/jest": "^22.2.3",
+    "@types/request": "^2.47.0",
+    "husky": "^0.14.3",
+    "jest": "^22.4.3",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^22.4.2",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
+  },
+  "dependencies": {
+    "request": "^2.85.0"
+  }
+}
