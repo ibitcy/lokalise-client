@@ -9,6 +9,16 @@ export interface IConfig {
   token: string;
 }
 
+export interface IFetchProjectOptions {
+  icu_numeric?: number;
+  id: string;
+  keys?: string[];
+  placeholder_format?: string;
+  platform_mask?: number;
+  plural_format?: string;
+  tags?: string[];
+}
+
 export class LokaliseClient {
   private readonly config: IConfig;
 
@@ -16,11 +26,12 @@ export class LokaliseClient {
     this.config = config;
   }
 
-  public fetchProject(projectId: string): Promise<Project> {
+  public fetchProject(options: IFetchProjectOptions): Promise<Project> {
     return getProjectStrings({
+      ...options,
+      api_token: this.config.token,
+      id: options.id,
       langs: this.config.langs,
-      projectId,
-      token: this.config.token,
     }).then(strings => {
       const locales: Locale[] = [];
 
@@ -42,19 +53,19 @@ export class LokaliseClient {
         });
       }
 
-      return new Project(projectId, locales);
+      return new Project(options.id, locales);
     });
   }
 
-  public fetchProjects(projectIds: string[]): Promise<Project[]> {
+  public fetchProjects(options: IFetchProjectOptions[]): Promise<Project[]> {
     const projects: Project[] = [];
 
     const addProject = (index: number): Promise<Project[]> => {
-      return this.fetchProject(projectIds[index])
+      return this.fetchProject(options[index])
         .then((project) => {
           projects.push(project);
 
-          if (index < projectIds.length - 1) {
+          if (index < options.length - 1) {
             return addProject(index + 1);
           }
 

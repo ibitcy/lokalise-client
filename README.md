@@ -3,7 +3,7 @@ Client for lokalise.co
 
 ## Installation
 
-`npm i lokalise-client --save` or `yarn add lokalise-client`
+`npm i lokalise-client --save-dev` or `yarn add lokalise-client`
 
 ## Usage example
 
@@ -35,3 +35,20 @@ client
   });
 });
 ```
+
+## Locale
+
+| Field | Type | Method | Description |
+|-|-|-|-|
+| language | `string` | `get` | Readonly. Locale language |
+| prefix | `string` | `get/set` | Prefix for translations keys |
+| translations | `Map<string, string>` | `false` | Locale translations |
+
+## Project
+
+| Field | Type | Readonly | Description |
+|-|-|-|-|
+| id | `string` | `true` | Project unique identifier |
+| defaultLanguage | `string` | `false` | Get/set default language of project |
+| prefix | `string` | `false` | Set prefix of all locales in project |
+| languages | `string[]` | `false` | Get list of languages in project |
