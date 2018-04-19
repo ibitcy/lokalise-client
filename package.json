@@ -8,6 +8,7 @@
     "build": "rimraf dist && tsc --declaration",
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "precommit": "npm run lint && npm run test",
+    "prepublish": "npm run lint && npm run test && npm run build",
     "start": "node dist/index.js",
     "test": "jest --config ./jest.config.json --no-cache"
   },
