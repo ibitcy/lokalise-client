@@ -14,7 +14,14 @@ const client = new LokaliseClient({
 });
 
 client
-.fetchProjects(['%projectId1%', '%projectId2%'])
+.fetchProjects([
+  {
+    id: %projectId1%,
+  },
+  {
+    id: %projectId2%,
+  },
+])
 .then(projects => {
   projects.forEach(project => {
     project.defaultLanguage = 'en';
