@@ -16,26 +16,25 @@ const lokaliseClient = new LokaliseClient({
 });
 ```
 
-### Fetch project and save
+### Load project. Save translations in file.
 
 ```
 lokaliseClient
 .fetchProject({
-  id: %projectId1%,
+  id: %projectId%,
 })
 .then(project => {
-  project
-  .save('src/locale/')
-  .then(languages => {
-    languages.forEach(language => console.log('Locale successfully saved! ', language));
-  })
-  .catch(language => {
-    console.log('Save locale failed! ', language)
-  });
+  return project.save('src/locale/');
+})
+.then(languages => {
+  languages.forEach(language => console.log('Locale successfully saved! ', language));
+})
+.catch(error => {
+  console.log('Save locale failed! ', error)
 });
 ```
 
-### Fetch several projects and save
+### Load several projects. Merge projects. Save translations in file.
 
 ```
 lokaliseClient
@@ -57,23 +56,22 @@ lokaliseClient
 .then(projects => {
   const project = LokaliseClient.mergeProjects(projects, '%new project id');
 
-  project
-  .save('src/locale/')
-  .then(languages => {
-    languages.forEach(language => console.log('Processed: ', language));
-  })
-  .catch(language => {
-    console.log('Save locale failed! ', language)
-  });
+  return project.save('src/locale/')
+})
+.then(languages => {
+  languages.forEach(language => console.log('Locale successfully saved! ', language));
+})
+.catch(error => {
+  console.log('Save locale failed! ', error)
 });
 ```
 
-### Check unused translations
+### Find unused translations in project.
 
 ```
 lokaliseClient
 .fetchProject({
-  id: %projectId1%,
+  id: %projectId%,
 })
 .then(project => {
   return project.getUnusedTranslationsKeys('./src/app/', 'en');
@@ -83,20 +81,46 @@ lokaliseClient
 });
 ```
 
+### Add prefix for project translations.
+```
+lokaliseClient
+.fetchProject({
+  id: %projectId%,
+})
+.then(project => {
+  project.prefix = '__SOME_PREFIX__.'
+
+  // Another actions with project
+});
+```
+
+### Set default language in project. If no translation for some key, take it from default language.
+```
+lokaliseClient
+.fetchProject({
+  id: %projectId%,
+})
+.then(project => {
+  project.defaultLanguage = 'en';
+
+  // Another actions with project
+});
+```
+
 ## Locale
 
-| Field | Type | Method | Description |
-|-|-|-|-|
-| language | `string` | `get` | Locale language |
-| prefix | `string` | `get/set` | Prefix for translations keys |
-| translations | `Map<string, string>` | `get` | Locale translations |
+| Field | Method | Description |
+|-|-|-|
+| language | `get` | Locale language |
+| prefix | `get/set` | Prefix for translations keys |
+| translations | `get` | Locale translations |
 
 ## Project
 
-| Field | Type | Method | Description |
-|-|-|-|-|
-| id | `string` | `get` | Project unique identifier |
-| defaultLanguage | `string` | `get/set` | Default language of project |
-| prefix | `string` | `set` | Prefix of all locales in project |
-| languages | `string[]` | `get` | List of languages in project |
-| getUnusedTranslationsKeys | `Promise<string[]>` | `get` | Returns unused translations keys in your project directory |
+| Field | Method | Description |
+|-|-|-|
+| id | `get` | Project unique identifier |
+| defaultLanguage | `get/set` | Default language of project |
+| prefix | `set` | Prefix of all locales in project |
+| languages | `get` | List of languages in project |
+| getUnusedTranslationsKeys | `get` | Returns unused translations keys in your project directory |
