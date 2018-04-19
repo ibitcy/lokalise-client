@@ -1,6 +1,6 @@
 {
   "name": "lokalise-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Client for lokalise.co",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,7 +15,10 @@
     "type": "git",
     "url": "git+https://github.com/ibitcy/lokalise-client.git"
   },
-  "keywords": ["lokalise", "lokalise.co"],
+  "keywords": [
+    "lokalise",
+    "lokalise.co"
+  ],
   "author": {
     "name": "Maksim Sharipov",
     "url": "https://github.com/pret-a-porter"
