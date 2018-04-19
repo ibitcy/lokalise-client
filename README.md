@@ -1,4 +1,4 @@
-# Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/lokalise-client)
+# Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/lokalise-client) [![Build Status](https://travis-ci.org/ibitcy/lokalise-client.svg?branch=master)](https://travis-ci.org/ibitcy/lokalise-client)
 Client for lokalise.co
 
 ## Installation
