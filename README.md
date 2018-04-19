@@ -1,4 +1,4 @@
-# Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/react)
+# Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/lokalise-client)
 Client for lokalise.co
 
 ## Installation
