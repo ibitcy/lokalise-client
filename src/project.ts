@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 
 import { Locale } from './locale';
+import { dirHasString } from './utils/index';
 
 export class Project {
   public readonly id: string;
@@ -71,6 +72,29 @@ export class Project {
 
   public save(path: string): Promise<string[]> {
     return Promise.all(this.languages.map(language => this.saveTranslation(path, language)));
+  }
+
+  public getUnusedTranslationsKeys(srcPath: string, language: string): Promise<string[]> {
+    const translations = this.getTranslations(language);
+
+    if (translations) {
+      return Promise.all(
+        Array.from(translations.keys()).map(key => dirHasString(srcPath, key)),
+      )
+      .then(result => {
+        const notFoundKeys = result.reduce((acc, item) => {
+          if (!item.isFound) {
+            acc.push(item.searchString);
+          }
+
+          return acc;
+        }, [] as string[]);
+
+        return notFoundKeys;
+      });
+    }
+
+    return Promise.resolve([]);
   }
 
   private saveTranslation(path: string, language: string): Promise<string> {
