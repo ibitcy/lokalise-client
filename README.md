@@ -42,13 +42,13 @@ client
 |-|-|-|-|
 | language | `string` | `get` | Readonly. Locale language |
 | prefix | `string` | `get/set` | Prefix for translations keys |
-| translations | `Map<string, string>` | `false` | Locale translations |
+| translations | `Map<string, string>` | `get` | Locale translations |
 
 ## Project
 
-| Field | Type | Readonly | Description |
+| Field | Type | Method | Description |
 |-|-|-|-|
-| id | `string` | `true` | Project unique identifier |
-| defaultLanguage | `string` | `false` | Get/set default language of project |
-| prefix | `string` | `false` | Set prefix of all locales in project |
-| languages | `string[]` | `false` | Get list of languages in project |
+| id | `string` | `get` | Project unique identifier |
+| defaultLanguage | `string` | `get/set` | Default language of project |
+| prefix | `string` | `set` | Prefix of all locales in project |
+| languages | `string[]` | `get` | List of languages in project |
