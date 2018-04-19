@@ -15,8 +15,11 @@
     "type": "git",
     "url": "git+https://github.com/ibitcy/lokalise-client.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["lokalise", "lokalise.co"],
+  "author": {
+    "name": "Maksim Sharipov",
+    "url": "https://github.com/pret-a-porter"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ibitcy/lokalise-client/issues"
