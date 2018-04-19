@@ -47,7 +47,7 @@ client
 
 | Field | Type | Method | Description |
 |-|-|-|-|
-| language | `string` | `get` | Readonly. Locale language |
+| language | `string` | `get` | Locale language |
 | prefix | `string` | `get/set` | Prefix for translations keys |
 | translations | `Map<string, string>` | `get` | Locale translations |
 
