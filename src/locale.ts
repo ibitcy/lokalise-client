@@ -1,8 +1,7 @@
 export class Locale {
+  public prefix = '';
   public readonly language: string;
   private readonly entities: Map<string, string>;
-
-  public prefix = '';
 
   public constructor(language: string, translations: Map<string, string>) {
     this.language = language;

@@ -1,7 +1,6 @@
 import { unique } from '..';
 
 describe('Get unique array function', () => {
-
   it('Should return empty array', () => {
     expect(unique<number>([])).toEqual([]);
   });
@@ -17,5 +16,4 @@ describe('Get unique array function', () => {
   it('Should return unique array', () => {
     expect(unique<string>(['foo', 'bar', 'bar'])).toEqual(['foo', 'bar']);
   });
-
 });

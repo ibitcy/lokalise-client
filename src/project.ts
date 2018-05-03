@@ -1,15 +1,14 @@
 import * as fs from 'fs';
 
 import { Locale } from './locale';
-import { dirHasString } from './utils/index';
+import { dirHasString } from './utils';
 
 export class Project {
-  public readonly id: string;
-  private readonly locales: Array<Locale> = [];
-
   public defaultLanguage = '';
+  public readonly id: string;
+  private readonly locales: Locale[] = [];
 
-  public constructor(id: string, locales: Array<Locale>) {
+  public constructor(id: string, locales: Locale[]) {
     this.id = id;
     this.locales = locales.slice();
   }
@@ -71,24 +70,31 @@ export class Project {
   }
 
   public save(path: string): Promise<string[]> {
-    return Promise.all(this.languages.map(language => this.saveTranslation(path, language)));
+    return Promise.all(
+      this.languages.map(language => this.saveTranslation(path, language))
+    );
   }
 
-  public getUnusedTranslationsKeys(srcPath: string, language: string): Promise<string[]> {
+  public getUnusedTranslationsKeys(
+    srcPath: string,
+    language: string
+  ): Promise<string[]> {
     const translations = this.getTranslations(language);
 
     if (translations) {
       return Promise.all(
-        Array.from(translations.keys()).map(key => dirHasString(srcPath, key)),
-      )
-      .then(result => {
-        const notFoundKeys = result.reduce((acc, item) => {
-          if (!item.isFound) {
-            acc.push(item.searchString);
-          }
+        Array.from(translations.keys()).map(key => dirHasString(srcPath, key))
+      ).then(result => {
+        const notFoundKeys = result.reduce(
+          (acc, item) => {
+            if (!item.isFound) {
+              acc.push(item.searchString);
+            }
 
-          return acc;
-        }, [] as string[]);
+            return acc;
+          },
+          [] as string[]
+        );
 
         return notFoundKeys;
       });
@@ -99,9 +105,13 @@ export class Project {
 
   private saveTranslation(path: string, language: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      const content = JSON.stringify(this.getFormattedTranslations(language), null, 4);
+      const content = JSON.stringify(
+        this.getFormattedTranslations(language),
+        null,
+        4
+      );
 
-      fs.writeFile(`${path}${language}.json`, content, (err) => {
+      fs.writeFile(`${path}${language}.json`, content, err => {
         if (err) {
           reject(language);
 
@@ -114,7 +124,9 @@ export class Project {
   }
 
   private get defaultTranslations(): Map<string, string> | null {
-    const defaultLocale = this.locales.find(item => item.language === this.defaultLanguage);
+    const defaultLocale = this.locales.find(
+      item => item.language === this.defaultLanguage
+    );
 
     if (!defaultLocale) {
       return null;

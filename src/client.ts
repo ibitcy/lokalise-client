@@ -1,8 +1,7 @@
 import { getProjectStrings } from './api/strings';
 import { Locale } from './locale';
 import { Project } from './project';
-import { unique } from './utils';
-import { mergeMaps } from './utils';
+import { mergeMaps, unique } from './utils';
 
 export interface IConfig {
   langs: string[];
@@ -20,6 +19,35 @@ export interface IFetchProjectOptions {
 }
 
 export class LokaliseClient {
+  public static mergeProjects(
+    projectList: Project[],
+    newProjectId: string
+  ): Project {
+    let projectListLanguages: string[] = [];
+    const newProjectLocales: Locale[] = [];
+
+    projectList.forEach(project => {
+      projectListLanguages = projectListLanguages.concat(project.languages);
+    });
+
+    projectListLanguages = unique(projectListLanguages);
+
+    projectListLanguages.forEach(language => {
+      let translations = new Map<string, string>();
+
+      projectList.forEach(project => {
+        translations = mergeMaps([
+          translations,
+          project.getTranslations(language)
+        ]);
+      });
+
+      newProjectLocales.push(new Locale(language, translations));
+    });
+
+    return new Project(newProjectId, newProjectLocales);
+  }
+
   private readonly config: IConfig;
 
   public constructor(config: IConfig) {
@@ -31,7 +59,7 @@ export class LokaliseClient {
       ...options,
       api_token: this.config.token,
       id: options.id,
-      langs: this.config.langs,
+      langs: this.config.langs
     }).then(strings => {
       const locales: Locale[] = [];
 
@@ -61,41 +89,17 @@ export class LokaliseClient {
     const projects: Project[] = [];
 
     const addProject = (index: number): Promise<Project[]> => {
-      return this.fetchProject(options[index])
-        .then((project) => {
-          projects.push(project);
+      return this.fetchProject(options[index]).then(project => {
+        projects.push(project);
 
-          if (index < options.length - 1) {
-            return addProject(index + 1);
-          }
+        if (index < options.length - 1) {
+          return addProject(index + 1);
+        }
 
-          return projects;
-        });
+        return projects;
+      });
     };
 
     return addProject(0);
-  }
-
-  public static mergeProjects(projectList: Project[], newProjectId: string): Project {
-    let projectListLanguages: string[] = [];
-    const newProjectLocales: Locale[] = [];
-
-    projectList.forEach(project => {
-      projectListLanguages = projectListLanguages.concat(project.languages);
-    });
-
-    projectListLanguages = unique(projectListLanguages);
-
-    projectListLanguages.forEach(language => {
-      let translations = new Map<string, string>();
-
-      projectList.forEach(project => {
-        translations = mergeMaps([translations, project.getTranslations(language)]);
-      });
-
-      newProjectLocales.push(new Locale(language, translations));
-    });
-
-    return new Project(newProjectId, newProjectLocales);
   }
 }

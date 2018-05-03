@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export function logError<T>(error: T) {
+  // tslint:disable-next-line:no-console
   console.error('System error! ', error);
 }
 
@@ -43,8 +44,13 @@ export function getDirFiles(dirPath: string): Promise<string[]> {
   });
 }
 
-export function fileHasString(filePath: string, searchString: string): Promise<boolean> {
-  return getFileData(filePath).then(fileData => fileData.includes(searchString));
+export function fileHasString(
+  filePath: string,
+  searchString: string
+): Promise<boolean> {
+  return getFileData(filePath).then(fileData =>
+    fileData.includes(searchString)
+  );
 }
 
 export interface ISearchResult {
@@ -52,7 +58,10 @@ export interface ISearchResult {
   searchString: string;
 }
 
-export function dirHasString(dirPath: string, searchString: string): Promise<ISearchResult> {
+export function dirHasString(
+  dirPath: string,
+  searchString: string
+): Promise<ISearchResult> {
   return new Promise<ISearchResult>((resolve, reject) => {
     return getDirFiles(path.resolve(dirPath))
       .then(items => {
@@ -72,16 +81,16 @@ export function dirHasString(dirPath: string, searchString: string): Promise<ISe
 
         return {
           dirs,
-          files,
+          files
         };
       })
       .then(({ dirs, files }) => {
-        return Promise
-        .all(files.map(file => fileHasString(file, searchString)))
-        .then(filesHasString => {
+        return Promise.all(
+          files.map(file => fileHasString(file, searchString))
+        ).then(filesHasString => {
           return {
             dirs,
-            filesHasString: filesHasString.some(Boolean),
+            filesHasString: filesHasString.some(Boolean)
           };
         });
       })
@@ -89,23 +98,22 @@ export function dirHasString(dirPath: string, searchString: string): Promise<ISe
         if (filesHasString) {
           return resolve({
             isFound: true,
-            searchString,
+            searchString
           });
         } else {
           if (dirs.length === 0) {
             return resolve({
               isFound: false,
-              searchString,
+              searchString
             });
           }
 
           return Promise.all(
-            dirs.map(dir => dirHasString(dir, searchString)),
-          )
-          .then(result => {
+            dirs.map(dir => dirHasString(dir, searchString))
+          ).then(result => {
             return resolve({
               isFound: result.some(({ isFound }) => isFound),
-              searchString,
+              searchString
             });
           });
         }
