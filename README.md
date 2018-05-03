@@ -12,7 +12,6 @@ Client for lokalise.co
 ```
 const lokaliseClient = new LokaliseClient({
   token: '%token%',
-  langs: ['en', 'ru'],
 });
 ```
 

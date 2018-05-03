@@ -1,22 +1,22 @@
-import { getProjectStrings } from './api/strings';
+import { getProjectStrings, IGetProjectStringsOptions } from './api/strings';
 import { Locale } from './locale';
 import { Project } from './project';
 import { mergeMaps, unique } from './utils';
 
 export interface IConfig {
-  langs: string[];
   token: string;
 }
 
-export interface IFetchProjectOptions {
-  icu_numeric?: number;
-  id: string;
-  keys?: string[];
-  placeholder_format?: string;
-  platform_mask?: number;
-  plural_format?: string;
-  tags?: string[];
-}
+export type TFetchProjectOptions = Pick<
+  IGetProjectStringsOptions,
+  | 'id'
+  | 'icu_numeric'
+  | 'keys'
+  | 'placeholder_format'
+  | 'platform_mask'
+  | 'plural_format'
+  | 'tags'
+>;
 
 export class LokaliseClient {
   public static mergeProjects(
@@ -54,12 +54,10 @@ export class LokaliseClient {
     this.config = config;
   }
 
-  public fetchProject(options: IFetchProjectOptions): Promise<Project> {
+  public fetchProject(options: TFetchProjectOptions): Promise<Project> {
     return getProjectStrings({
       ...options,
-      api_token: this.config.token,
-      id: options.id,
-      langs: this.config.langs
+      api_token: this.config.token
     }).then(strings => {
       const locales: Locale[] = [];
 
@@ -85,7 +83,7 @@ export class LokaliseClient {
     });
   }
 
-  public fetchProjects(options: IFetchProjectOptions[]): Promise<Project[]> {
+  public fetchProjects(options: TFetchProjectOptions[]): Promise<Project[]> {
     const projects: Project[] = [];
 
     const addProject = (index: number): Promise<Project[]> => {
