@@ -1,22 +1,13 @@
 import { getProjectStrings, IGetProjectStringsOptions } from './api/strings';
 import { Locale } from './locale';
 import { Project } from './project';
-import { mergeMaps, unique } from './utils';
+import { mergeMaps, Omit, unique } from './utils';
 
 export interface IConfig {
   token: string;
 }
 
-export type TFetchProjectOptions = Pick<
-  IGetProjectStringsOptions,
-  | 'id'
-  | 'icu_numeric'
-  | 'keys'
-  | 'placeholder_format'
-  | 'platform_mask'
-  | 'plural_format'
-  | 'tags'
->;
+export type TFetchProjectOptions = Omit<IGetProjectStringsOptions, 'api_token'>;
 
 export class LokaliseClient {
   public static mergeProjects(
