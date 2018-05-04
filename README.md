@@ -7,23 +7,18 @@ Client for lokalise.co
 
 ## Usage examples
 
-### First step. Create lokalise client.
-
+* Create file `translations.js` in your project dir
 ```
 const lokaliseClient = new LokaliseClient({
   token: '%token%',
 });
-```
 
-### Load project. Save translations in file.
-
-```
 lokaliseClient
 .fetchProject({
   id: %projectId%,
 })
 .then(project => {
-  return project.save('src/locale/');
+  return project.save('./src/locales');
 })
 .then(languages => {
   languages.forEach(language => console.log('Locale successfully saved! ', language));
@@ -32,6 +27,8 @@ lokaliseClient
   console.log('Save locale failed! ', error)
 });
 ```
+* In your `package.json` file add command `"translations": "node translations"`
+* In terminal run command `npm run translations`
 
 ### Load several projects. Merge projects. Save translations in file.
 
@@ -55,7 +52,7 @@ lokaliseClient
 .then(projects => {
   const project = LokaliseClient.mergeProjects(projects, '%new project id');
 
-  return project.save('src/locale/')
+  return project.save('./src/locales')
 })
 .then(languages => {
   languages.forEach(language => console.log('Locale successfully saved! ', language));

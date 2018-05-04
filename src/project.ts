@@ -111,6 +111,10 @@ export class Project {
         4
       );
 
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+      }
+
       fs.writeFile(`${path}${language}.json`, content, err => {
         if (err) {
           reject(language);
