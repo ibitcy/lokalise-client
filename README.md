@@ -7,6 +7,26 @@ Client for lokalise.co
 
 ## Usage examples
 
+### Simple
+
+* In your project dir create configuration file `translations.json` like this:
+```
+{
+  "dist": "./src/locale/",
+  "defaultLanguage": "en",
+  "token": "%token%",
+  "projects": [
+    {
+      "id": "%project_id%"
+    }
+  ]
+}
+```
+* In your `package.json` file add command `"fetch-translations": "translations fetch --path ./translations.json"`
+* In terminal run command `npm run fetch-translations`
+
+### Pro
+
 * Create file `translations.js` in your project dir
 ```
 const lokaliseClient = new LokaliseClient({
