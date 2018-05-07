@@ -1,7 +1,6 @@
 import * as request from 'request';
 
 import { TStrings } from '../models/strings';
-import { logError } from '../utils';
 
 export interface IGetProjectStringsOptions {
   api_token: string;
@@ -22,7 +21,7 @@ export interface IGetProjectStringsResponse {
 
 export function getProjectStrings(
   options: IGetProjectStringsOptions
-): Promise<TStrings | null> {
+): Promise<TStrings | string> {
   const defaultOptions: Partial<IGetProjectStringsOptions> = {
     icu_numeric: 0,
     placeholder_format: 'icu',
@@ -35,16 +34,20 @@ export function getProjectStrings(
     ...options
   };
 
-  return new Promise<TStrings | null>((resolve, reject) => {
+  return new Promise<TStrings | string>((resolve, reject) => {
     request.post(
       {
         formData: mergedOptions,
         url: 'https://api.lokalise.co/api/string/list'
       },
       (err, httpResponse, body: string) => {
+        if (httpResponse.statusCode !== 200) {
+          reject(`Invalid response code: ${httpResponse.statusCode}`)
+          return;
+        }
+
         if (err) {
-          logError(err);
-          reject(null);
+          reject(err);
 
           return;
         }
@@ -56,11 +59,10 @@ export function getProjectStrings(
           if (data && data.strings) {
             resolve(data.strings);
           } else {
-            reject(null);
+            reject('Invalid response format!');
           }
         } catch (error) {
-          logError(error);
-          reject(null);
+          reject(error);
         }
       }
     );

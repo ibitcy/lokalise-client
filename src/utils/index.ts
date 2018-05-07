@@ -3,11 +3,6 @@ import * as path from 'path';
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
-export function logError<T>(error: T) {
-  // tslint:disable-next-line:no-console
-  console.error('System error! ', error);
-}
-
 export function unique<T>(arr: T[]): T[] {
   return [...new Set(arr)];
 }

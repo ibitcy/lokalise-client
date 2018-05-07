@@ -34,6 +34,11 @@ program.command('fetch').action((env, options) => {
 
   client
     .fetchProjects(config.projects)
+    .catch(error => {
+      logError(`Fetch projects was failed! ${error}`);
+
+      throw new Error(error);
+    })
     .then(projects => {
       projects.forEach(project => {
         const params = config.projects.find(({ id }) => id === project.id);
@@ -57,6 +62,8 @@ program.command('fetch').action((env, options) => {
     })
     .catch(error => {
       logError(`Saving translation was failed! ${error}`);
+
+      throw new Error(error);
     })
     .then(languages => {
       languages.forEach(language =>
