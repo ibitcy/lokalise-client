@@ -3,7 +3,7 @@ Client for lokalise.co
 
 ## Installation
 
-`npm i lokalise-client --save-dev` or `yarn add lokalise-client`
+`npm i lokalise-client --save-dev` or `yarn add lokalise-client --dev`
 
 ## Usage examples
 
