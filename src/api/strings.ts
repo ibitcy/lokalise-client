@@ -21,7 +21,7 @@ export interface IGetProjectStringsResponse {
 
 export function getProjectStrings(
   options: IGetProjectStringsOptions
-): Promise<TStrings | string> {
+): Promise<TStrings> {
   const defaultOptions: Partial<IGetProjectStringsOptions> = {
     icu_numeric: 0,
     placeholder_format: 'icu',
@@ -34,7 +34,7 @@ export function getProjectStrings(
     ...options
   };
 
-  return new Promise<TStrings | string>((resolve, reject) => {
+  return new Promise<TStrings>((resolve, reject) => {
     request.post(
       {
         formData: mergedOptions,
