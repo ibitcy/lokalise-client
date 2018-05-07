@@ -7,3 +7,5 @@ src
 tsconfig.json
 tslint.json
 jest.config.json
+.prettierrc
+.travis.yml
