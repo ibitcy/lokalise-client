@@ -1,6 +1,6 @@
 import { TBooleanString } from './common';
 
-export type TStrings = { [key in string]?: IKey[] };
+export type TStrings = Record<string, IKey[]>;
 
 export interface IKey {
   context: null;
