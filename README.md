@@ -1,15 +1,13 @@
 # Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/lokalise-client) [![Build Status](https://travis-ci.org/ibitcy/lokalise-client.svg?branch=master)](https://travis-ci.org/ibitcy/lokalise-client)
-Client for lokalise.co
 
-## Installation
+Easy fetch your translations from lokalise.co:
+1. Install `npm i lokalise-client --save-dev` or `yarn add lokalise-client --dev`
+2. Create configuration file `translations.json`
+3. In your `package.json` file add command `"fetch-translations": "translations fetch --path ./translations.json"`
+4. Run command `npm run fetch-translations`
 
-`npm i lokalise-client --save-dev` or `yarn add lokalise-client --dev`
+Configuration file example
 
-## Usage examples
-
-### Simple
-
-* In your project dir create configuration file `translations.json` like this:
 ```
 {
   "dist": "./src/locale/",
@@ -22,10 +20,8 @@ Client for lokalise.co
   ]
 }
 ```
-* In your `package.json` file add command `"fetch-translations": "translations fetch --path ./translations.json"`
-* In terminal run command `npm run fetch-translations`
 
-### Pro
+### Pro mode
 
 * Create file `translations.js` in your project dir
 ```
