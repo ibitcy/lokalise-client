@@ -5,7 +5,6 @@ var pjson = require('../package.json');
 const program = require('commander');
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk');
 
 program
   .version(pjson.version)
@@ -14,7 +13,7 @@ program
 program.command('fetch').action((env, options) => {
   if (!program.path) {
     logError(
-      'Path to configuration file is required param! Add --path parameter!'
+      'Path to configuration file is required param! Add --path parameter!',
     );
     return;
   }
@@ -29,7 +28,7 @@ program.command('fetch').action((env, options) => {
   }
 
   const client = new LokaliseClient({
-    token: config.token
+    token: config.token,
   });
 
   client
@@ -55,7 +54,7 @@ program.command('fetch').action((env, options) => {
       const project = LokaliseClient.mergeProjects(projects, 'merged');
 
       const dist = path.format({
-        dir: config.dist
+        dir: config.dist,
       });
 
       return project.save(dist);
@@ -67,7 +66,7 @@ program.command('fetch').action((env, options) => {
     })
     .then(languages => {
       languages.forEach(language =>
-        logMessage(`Saving translation was successful: ${language}`)
+        logMessage(`Saving translation was successful: ${language}`),
       );
     });
 });
@@ -75,10 +74,10 @@ program.command('fetch').action((env, options) => {
 program.parse(process.argv);
 
 function logError(error) {
-  console.error(chalk.white.bgRed.bold('Error!'));
-  console.error(chalk.red(error));
+  console.error('%c Error! ', 'background: red; color: white;');
+  console.error('%c ' + error, 'color: red;');
 }
 
 function logMessage(message) {
-  console.error(chalk.green(message));
+  console.error('%c ' + message, 'color: green;');
 }
