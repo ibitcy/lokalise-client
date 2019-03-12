@@ -1,6 +1,6 @@
 {
   "name": "lokalise-client",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Client for lokalise.co",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
