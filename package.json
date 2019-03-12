@@ -9,7 +9,7 @@
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "preversion": "npm run lint && npm run test && npm run build",
     "start": "node dist/index.js",
-    "test": "jest --config ./jest.config.json --no-cache"
+    "test": "jest --config ./jest.config.json --no-cache --detectOpenHandles"
   },
   "bin": {
     "translations": "./bin/index.js"
@@ -32,12 +32,12 @@
   },
   "homepage": "https://github.com/ibitcy/lokalise-client#readme",
   "devDependencies": {
-    "@types/jest": "^23.0.0",
+    "@types/jest": "^24.0.0",
     "@types/request": "^2.47.0",
     "husky": "^1.0.0",
     "jest": "^24.0.0",
     "rimraf": "^2.6.2",
-    "ts-jest": "^23.0.0",
+    "ts-jest": "^24.0.0",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^3.0.0"
