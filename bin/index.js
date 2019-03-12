@@ -74,10 +74,10 @@ program.command('fetch').action((env, options) => {
 program.parse(process.argv);
 
 function logError(error) {
-  console.error('%c Error! ', 'background: red; color: white;');
-  console.error('%c ' + error, 'color: red;');
+  console.error('\x1b[41m', ' Error! ', '\x1b[0m');
+  console.error('\x1b[31m' + error, '\x1b[0m');
 }
 
 function logMessage(message) {
-  console.error('%c ' + message, 'color: green;');
+  console.error('\x1b[32m' + message, '\x1b[0m');
 }
