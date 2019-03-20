@@ -8,7 +8,7 @@ Easy fetch your translations from lokalise.co:
 
 Configuration file example
 
-```
+```json
 {
   "dist": "./src/locale/",
   "defaultLanguage": "en",
@@ -24,7 +24,7 @@ Configuration file example
 ### Pro mode
 
 * Create file `translations.js` in your project dir
-```
+```js
 const lokaliseClient = new LokaliseClient({
   token: '%token%',
 });
@@ -48,7 +48,7 @@ lokaliseClient
 
 ### Load several projects. Merge projects. Save translations in file.
 
-```
+```js
 lokaliseClient
 .fetchProjects([
   {
@@ -80,7 +80,7 @@ lokaliseClient
 
 ### Find unused translations in project.
 
-```
+```js
 lokaliseClient
 .fetchProject({
   id: %projectId%,
@@ -94,7 +94,8 @@ lokaliseClient
 ```
 
 ### Add prefix for project translations.
-```
+
+```js
 lokaliseClient
 .fetchProject({
   id: %projectId%,
@@ -107,7 +108,8 @@ lokaliseClient
 ```
 
 ### Set default language in project. If no translation for some key, take it from default language.
-```
+
+```js
 lokaliseClient
 .fetchProject({
   id: %projectId%,
