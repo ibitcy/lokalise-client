@@ -1,4 +1,7 @@
-# Lokalise-client [![npm version](https://img.shields.io/npm/v/lokalise-client.svg?style=flat)](https://www.npmjs.com/package/lokalise-client) [![Build Status](https://travis-ci.org/ibitcy/lokalise-client.svg?branch=master)](https://travis-ci.org/ibitcy/lokalise-client)
+# Lokalise-client
+
+[![build status](https://badgen.net/travis/ibitcy/lokalise-client?icon=travis)](https://travis-ci.org/ibitcy/lokalise-client)
+[![npm downloads](https://badgen.net/npm/dt/lokalise-client?icon=npm&color=green)](https://www.npmjs.com/package/lokalise-client)
 
 Easy fetch your translations from lokalise.co:
 1. Install `npm i lokalise-client --save-dev` or `yarn add lokalise-client --dev`
@@ -6,7 +9,7 @@ Easy fetch your translations from lokalise.co:
 3. In your `package.json` file add command `"fetch-translations": "translations fetch --path ./translations.json"`
 4. Run command `npm run fetch-translations`
 
-Configuration file example
+### Basic configuration `translations.json`
 
 ```json
 {
@@ -16,6 +19,26 @@ Configuration file example
   "projects": [
     {
       "id": "%project_id%"
+    }
+  ]
+}
+```
+
+### Fetch several projects
+
+```json
+{
+  "dist": "./src/locale/",
+  "defaultLanguage": "en",
+  "token": "%token%",
+  "projects": [
+    {
+      "id": "%project_id%",
+      "prefix": "__PROJECT_1__"
+    },
+    {
+      "id": "%another_project_id%",
+      "prefix": "__PROJECT_2__"
     }
   ]
 }
