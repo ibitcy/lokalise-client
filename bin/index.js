@@ -40,11 +40,17 @@ program.command('fetch').action((env, options) => {
     })
     .then(projects => {
       projects.forEach(project => {
-        const params = config.projects.find(({ id }) => id === project.id);
+        const projectParams = config.projects.find(({ id }) => id === project.id);
         project.defaultLanguage = config.defaultLanguage;
 
-        if (params && params.prefix) {
-          project.prefix = params.prefix;
+        if (projectParams) {
+          if (projectParams.prefix) {
+            project.prefix = projectParams.prefix;
+          }
+
+          if (projectParams.defaultLanguage) {
+            project.defaultLanguage = projectParams.defaultLanguage;
+          }
         }
       });
 
