@@ -34,7 +34,7 @@ export class Locale {
     result += `export enum ${options.name} {\n`;
 
     translations.forEach((translation, key) => {
-      result += `\t${formatPhraseToEnum(key)} = "${translation}",\n`;
+      result += `\t${formatPhraseToEnum(key)} = '${key}',\n`;
     });
 
     result += `}\n`;
