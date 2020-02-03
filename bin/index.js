@@ -58,6 +58,7 @@ program.command('fetch').action((env, options) => {
     })
     .then(projects => {
       const project = LokaliseClient.mergeProjects(projects, 'merged');
+      project.defaultLanguage = config.defaultLanguage;
 
       const dist = path.format({
         dir: config.dist,
