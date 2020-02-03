@@ -40,7 +40,9 @@ program.command('fetch').action((env, options) => {
     })
     .then(projects => {
       projects.forEach(project => {
-        const projectParams = config.projects.find(({ id }) => id === project.id);
+        const projectParams = config.projects.find(
+          ({ id }) => id === project.id,
+        );
         project.defaultLanguage = config.defaultLanguage;
 
         if (projectParams) {
@@ -60,15 +62,20 @@ program.command('fetch').action((env, options) => {
       const project = LokaliseClient.mergeProjects(projects, 'merged');
       project.defaultLanguage = config.defaultLanguage;
 
-      const dist = path.format({
-        dir: config.dist,
-      });
-
       if (config.enum) {
-        project.saveEnum(dist, config.enum);
+        project.saveEnum(
+          path.format({
+            dir: config.enum.dist,
+          }),
+          config.enum,
+        );
       }
 
-      return project.save(dist);
+      return project.save(
+        path.format({
+          dir: config.dist,
+        }),
+      );
     })
     .catch(error => {
       logError(`Saving translation was failed! ${error}`);
