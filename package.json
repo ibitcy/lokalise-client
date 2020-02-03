@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc --declaration",
+    "build": "rm -rf dist && tsc --declaration",
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "preversion": "npm run lint && npm run test && npm run build",
     "start": "node dist/index.js",
@@ -32,18 +32,17 @@
   },
   "homepage": "https://github.com/ibitcy/lokalise-client#readme",
   "devDependencies": {
-    "@types/jest": "^24.0.0",
+    "@types/jest": "^25.1.1",
     "@types/request": "^2.47.0",
-    "husky": "^2.0.0",
-    "jest": "^24.0.0",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^24.0.0",
-    "tslint": "^5.10.0",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.1.0",
+    "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^3.0.0"
   },
   "dependencies": {
-    "commander": "^2.15.1",
+    "commander": "^4.1.1",
     "request": "^2.85.0"
   }
 }
