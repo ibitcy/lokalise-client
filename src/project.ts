@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import { Locale } from './locale';
+import { IEnumOptions, Locale } from './locale';
 import { dirHasString } from './utils';
 
 export class Project {
@@ -71,30 +71,43 @@ export class Project {
 
   public save(path: string): Promise<string[]> {
     return Promise.all(
-      this.languages.map(language => this.saveTranslation(path, language))
+      this.languages.map(language => this.saveTranslation(path, language)),
     );
+  }
+
+  public saveEnum(path: string, options: IEnumOptions) {
+    const defaultLocale = this.getDefaultLocale();
+
+    if (!defaultLocale) {
+      throw new Error('Default locale required!');
+    }
+
+    const enumContent = defaultLocale.getEnum(options);
+
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path);
+    }
+
+    fs.writeFileSync(`${path}translations.ts`, enumContent);
   }
 
   public getUnusedTranslationsKeys(
     srcPath: string,
-    language: string
+    language: string,
   ): Promise<string[]> {
     const translations = this.getTranslations(language);
 
     if (translations) {
       return Promise.all(
-        Array.from(translations.keys()).map(key => dirHasString(srcPath, key))
+        Array.from(translations.keys()).map(key => dirHasString(srcPath, key)),
       ).then(result => {
-        const notFoundKeys = result.reduce(
-          (acc, item) => {
-            if (!item.isFound) {
-              acc.push(item.searchString);
-            }
+        const notFoundKeys = result.reduce((acc, item) => {
+          if (!item.isFound) {
+            acc.push(item.searchString);
+          }
 
-            return acc;
-          },
-          [] as string[]
-        );
+          return acc;
+        }, [] as string[]);
 
         return notFoundKeys;
       });
@@ -108,7 +121,7 @@ export class Project {
       const content = JSON.stringify(
         this.getFormattedTranslations(language),
         null,
-        4
+        4,
       );
 
       if (!fs.existsSync(path)) {
@@ -128,14 +141,16 @@ export class Project {
   }
 
   private get defaultTranslations(): Map<string, string> | null {
-    const defaultLocale = this.locales.find(
-      item => item.language === this.defaultLanguage
-    );
+    const defaultLocale = this.getDefaultLocale();
 
     if (!defaultLocale) {
       return null;
     }
 
     return defaultLocale.translations;
+  }
+
+  private getDefaultLocale() {
+    return this.locales.find(item => item.language === this.defaultLanguage);
   }
 }

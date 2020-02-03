@@ -1,3 +1,9 @@
+export interface IEnumOptions {
+  name: string;
+  phraseSeparator: string;
+  separator: string;
+}
+
 export class Locale {
   public prefix = '';
   public readonly language: string;
@@ -16,5 +22,23 @@ export class Locale {
     });
 
     return entitiesWithPrefix;
+  }
+
+  public getEnum(options: IEnumOptions): string {
+    let result = '';
+
+    const formatPhraseToEnum = (phrase: string): string =>
+      phrase.split(options.phraseSeparator).join(options.separator);
+
+    const translations = this.translations;
+    result += `export enum ${options.name} {\n`;
+
+    translations.forEach((translation, key) => {
+      result += `\t${formatPhraseToEnum(key)} = "${translation}",\n`;
+    });
+
+    result += `}\n`;
+
+    return result;
   }
 }

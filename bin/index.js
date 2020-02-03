@@ -63,6 +63,10 @@ program.command('fetch').action((env, options) => {
         dir: config.dist,
       });
 
+      if (config.enum) {
+        project.saveEnum(dist, config.enum);
+      }
+
       return project.save(dist);
     })
     .catch(error => {
