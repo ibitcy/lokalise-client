@@ -36,7 +36,9 @@ export class Project {
           const mergedTranslations = new Map<string, string>(translations);
 
           defaultTranslations.forEach((translation, key) => {
-            if (!mergedTranslations.has(key)) {
+            const defaultTranslation = mergedTranslations.get(key);
+
+            if (!defaultTranslation) {
               mergedTranslations.set(key, translation);
             }
           });
