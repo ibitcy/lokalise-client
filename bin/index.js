@@ -75,6 +75,7 @@ program.command('fetch').action((env, options) => {
         path.format({
           dir: config.dist,
         }),
+        config.prefix || '',
       );
     })
     .catch(error => {

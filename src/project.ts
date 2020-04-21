@@ -68,9 +68,9 @@ export class Project {
     return result;
   }
 
-  public save(path: string): Promise<string[]> {
+  public save(path: string, prefix: string): Promise<string[]> {
     return Promise.all(
-      this.languages.map(language => this.saveTranslation(path, language)),
+      this.languages.map(language => this.saveTranslation(path, prefix, language)),
     );
   }
 
@@ -115,7 +115,7 @@ export class Project {
     return Promise.resolve([]);
   }
 
-  private saveTranslation(path: string, language: string): Promise<string> {
+  private saveTranslation(path: string, prefix: string, language: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const content = JSON.stringify(
         this.getFormattedTranslations(language),
@@ -127,7 +127,7 @@ export class Project {
         fs.mkdirSync(path);
       }
 
-      fs.writeFile(`${path}${language}.json`, content, err => {
+      fs.writeFile(`${path}${prefix}${language}.json`, content, err => {
         if (err) {
           reject(language);
 
