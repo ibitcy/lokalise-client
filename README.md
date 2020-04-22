@@ -14,13 +14,20 @@ Easy fetch your translations from lokalise.co:
 ```json
 {
   "dist": "./src/locale/",
+  "prefix": "locale.",
   "defaultLanguage": "en",
   "token": "%token%",
   "projects": [
     {
       "id": "%project_id%"
     }
-  ]
+  ],
+  "enum": {
+    "dist": "./src/types/",
+    "name": "translations",
+    "phraseSeparator": "|",
+    "separator": "|"
+  }
 }
 ```
 
