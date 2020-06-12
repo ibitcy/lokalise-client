@@ -27,76 +27,9 @@ program.command('fetch').action((env, options) => {
     return;
   }
 
-  const client = new LokaliseClient({
-    token: config.token,
-  });
+  const client = new LokaliseClient(config);
 
-  client
-    .fetchProjects(config.projects)
-    .catch(error => {
-      logError(`Fetch projects was failed! ${error}`);
-
-      throw new Error(error);
-    })
-    .then(projects => {
-      projects.forEach(project => {
-        const projectParams = config.projects.find(
-          ({ id }) => id === project.id,
-        );
-        project.defaultLanguage = config.defaultLanguage;
-
-        if (projectParams) {
-          if (projectParams.prefix) {
-            project.prefix = projectParams.prefix;
-          }
-
-          if (projectParams.defaultLanguage) {
-            project.defaultLanguage = projectParams.defaultLanguage;
-          }
-        }
-      });
-
-      return projects;
-    })
-    .then(projects => {
-      const project = LokaliseClient.mergeProjects(projects, 'merged');
-      project.defaultLanguage = config.defaultLanguage;
-
-      if (config.enum) {
-        project.saveEnum(
-          path.format({
-            dir: config.enum.dist,
-          }),
-          config.enum,
-        );
-      }
-
-      return project.save(
-        path.format({
-          dir: config.dist,
-        }),
-        config.prefix || '',
-      );
-    })
-    .catch(error => {
-      logError(`Saving translation was failed! ${error}`);
-
-      throw new Error(error);
-    })
-    .then(languages => {
-      languages.forEach(language =>
-        logMessage(`Saving translation was successful: ${language}`),
-      );
-    });
+  client.fetchTranslations();
 });
 
 program.parse(process.argv);
-
-function logError(error) {
-  console.error('\x1b[41m', ' Error! ', '\x1b[0m');
-  console.error('\x1b[31m' + error, '\x1b[0m');
-}
-
-function logMessage(message) {
-  console.error('\x1b[32m' + message, '\x1b[0m');
-}

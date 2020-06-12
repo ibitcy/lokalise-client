@@ -13,9 +13,9 @@ Easy fetch your translations from lokalise.co:
 
 ```json
 {
+  "clean": true,
   "dist": "./src/locale/",
   "prefix": "locale.",
-  "defaultLanguage": "en",
   "token": "%token%",
   "projects": [
     {
@@ -23,10 +23,7 @@ Easy fetch your translations from lokalise.co:
     }
   ],
   "enum": {
-    "dist": "./src/types/",
-    "name": "translations",
-    "phraseSeparator": "|",
-    "separator": "|"
+    "dist": "./src/types/"
   }
 }
 ```
@@ -35,8 +32,9 @@ Easy fetch your translations from lokalise.co:
 
 ```json
 {
+  "clean": true,
   "dist": "./src/locale/",
-  "defaultLanguage": "en",
+  "prefix": "locale.",
   "token": "%token%",
   "projects": [
     {
@@ -50,21 +48,3 @@ Easy fetch your translations from lokalise.co:
   ]
 }
 ```
-
-### Find unused translations in project.
-
-* Create file `translations.js` in your project dir
-```js
-lokaliseClient
-.fetchProject({
-  id: %projectId%,
-})
-.then(project => {
-  return project.getUnusedTranslationsKeys('./src/app/', 'en');
-})
-.then(notFoundKeys => {
-  console.log(notFoundKeys);
-});
-```
-* In your `package.json` file add command `"translations": "node translations"`
-* In terminal run command `npm run translations`

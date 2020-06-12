@@ -1,119 +1,34 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
-export function unique<T>(arr: T[]): T[] {
-  return [...new Set(arr)];
+export function saveJsonToFile(dir: string, fileName: string, json: object) {
+  saveFile(dir, fileName, JSON.stringify(json, undefined, 2));
 }
 
-export function mergeMaps<K, V>(maps: Array<Map<K, V> | null>): Map<K, V> {
-  let merged = new Map<K, V>();
+export function saveFile(dir: string, fileName: string, content: string) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
 
-  maps.filter(Boolean).forEach(map => {
-    merged = new Map<K, V>([...merged, ...map]);
-  });
-
-  return merged;
+  fs.writeFileSync(path.resolve(process.cwd(), dir, fileName), content);
 }
 
-export function getFileData(filePath: string): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    fs.readFile(path.resolve(filePath), 'utf8', (error, data) => {
-      if (error) {
-        return reject(error);
-      }
-
-      return resolve(data);
-    });
-  });
+export function removeDirectory(dir: string) {
+  fs.rmdirSync(dir, { recursive: true });
 }
 
-export function getDirFiles(dirPath: string): Promise<string[]> {
-  return new Promise<string[]>((resolve, reject) => {
-    fs.readdir(path.resolve(dirPath), (error, files) => {
-      if (error) {
-        return reject(error);
-      }
+export function logMessage(message: string, level: 'success' | 'warning' | 'error') {
+  const prefix = '[lokalise-client]';
 
-      return resolve(files);
-    });
-  });
-}
+  if (level === 'success') {
+    console.debug(`\x1b[32m ${prefix} Success! ${message} \x1b[0m`);
+  }
 
-export function fileHasString(
-  filePath: string,
-  searchString: string
-): Promise<boolean> {
-  return getFileData(filePath).then(fileData =>
-    fileData.includes(searchString)
-  );
-}
+  if (level === 'error') {
+    console.error(`\x1b[31m ${prefix} Error! ${message} \x1b[0m`);
+  }
 
-export interface ISearchResult {
-  isFound: boolean;
-  searchString: string;
-}
-
-export function dirHasString(
-  dirPath: string,
-  searchString: string
-): Promise<ISearchResult> {
-  return new Promise<ISearchResult>((resolve, reject) => {
-    return getDirFiles(path.resolve(dirPath))
-      .then(items => {
-        const files: string[] = [];
-        const dirs: string[] = [];
-
-        items.forEach(item => {
-          const itemPath = path.resolve(dirPath, item);
-          const itemStat = fs.lstatSync(itemPath);
-
-          if (itemStat.isFile()) {
-            files.push(itemPath);
-          } else if (itemStat.isDirectory()) {
-            dirs.push(itemPath);
-          }
-        });
-
-        return {
-          dirs,
-          files
-        };
-      })
-      .then(({ dirs, files }) => {
-        return Promise.all(
-          files.map(file => fileHasString(file, searchString))
-        ).then(filesHasString => {
-          return {
-            dirs,
-            filesHasString: filesHasString.some(Boolean)
-          };
-        });
-      })
-      .then(({ dirs, filesHasString }) => {
-        if (filesHasString) {
-          return resolve({
-            isFound: true,
-            searchString
-          });
-        } else {
-          if (dirs.length === 0) {
-            return resolve({
-              isFound: false,
-              searchString
-            });
-          }
-
-          return Promise.all(
-            dirs.map(dir => dirHasString(dir, searchString))
-          ).then(result => {
-            return resolve({
-              isFound: result.some(({ isFound }) => isFound),
-              searchString
-            });
-          });
-        }
-      });
-  });
+  if (level === 'warning') {
+    console.warn(`\x1b[33m ${prefix} Warning! ${message} \x1b[0m`);
+  }
 }
