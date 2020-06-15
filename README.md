@@ -1,4 +1,4 @@
-# Lokalise-client
+# ⚙️ Lokalise-client
 
 [![build status](https://badgen.net/travis/ibitcy/lokalise-client?icon=travis)](https://travis-ci.org/ibitcy/lokalise-client)
 [![npm downloads](https://badgen.net/npm/dt/lokalise-client?icon=npm&color=green)](https://www.npmjs.com/package/lokalise-client)
