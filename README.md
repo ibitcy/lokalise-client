@@ -34,6 +34,8 @@ Add `translations.json` file in root of your project. Basic example:
 }
 ```
 
+You can define several projects. Also you can extend project params by [official lokalise api](https://app.lokalise.com/api2docs/curl/#transition-download-files-post).
+
 ## Fetch translations
 
 In your `package.json` file add command `"fetch-translations": "translations fetch"`.
@@ -54,5 +56,3 @@ If you want to save declaration file for your translations, define `declaration`
   "dist": "src/models"
 }
 ```
-
-Also you can extend project params by [official lokalise api](https://app.lokalise.com/api2docs/curl/#transition-download-files-post).
