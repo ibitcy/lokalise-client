@@ -37,6 +37,7 @@ Add `translations.json` file in root of your project. Basic example:
 ## Fetch translations
 
 In your `package.json` file add command `"fetch-translations": "translations fetch"`.
+
 Run command `npm run fetch-translations`.
 
 ## Additional options
