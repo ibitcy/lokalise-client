@@ -63,7 +63,7 @@ export class LokaliseClient {
         `${prefix || ''}${locale.language}.json`,
         locale.getTranslations(useFlat),
       );
-      logMessage(`Translations were saved ${locale.language}`, 'success');
+      logMessage(`Translations were saved ${locale.language}. Translations count: ${locale.getTranslationsCount()}`, 'success');
     });
 
     if (declaration) {
@@ -72,7 +72,7 @@ export class LokaliseClient {
         'translations.ts',
         this.locales[0].getEnum(declaration.delimiter),
       );
-      logMessage(`Declaration was saved`, 'success');
+      logMessage(`Declaration file was saved`, 'success');
     }
   }
 

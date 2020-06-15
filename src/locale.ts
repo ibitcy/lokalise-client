@@ -59,7 +59,11 @@ export class Locale {
 
     return result;
   }
-}
+
+  public getTranslationsCount(): number {
+    return Object.keys(this.getTranslations(true)).length;
+  }
+ }
 
 function getObjectPathList(target: Record<string, unknown>): string[][] {
   const result: string[][] = [];
