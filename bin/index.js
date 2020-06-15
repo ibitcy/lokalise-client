@@ -26,3 +26,8 @@ program.command('fetch').action((env, options) => {
 });
 
 program.parse(process.argv);
+
+function logError(error) {
+  console.error('\x1b[41m', ' Error! ', '\x1b[0m');
+  console.error('\x1b[31m' + error, '\x1b[0m');
+}
