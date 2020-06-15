@@ -11,7 +11,9 @@ interface Config {
 
   clean?: boolean;
   declaration?: DeclarationConfig;
+  delimiter?: string;
   prefix?: string;
+  useFlat?: boolean;
 }
 
 interface ProjectConfig extends Omit<DownloadFileParams, 'format'> {
@@ -38,7 +40,7 @@ export class LokaliseClient {
   }
 
   public async fetchTranslations() {
-    const { clean, declaration, dist } = this.config;
+    const { clean, declaration, dist, prefix, useFlat } = this.config;
 
     try {
       await Promise.all(
@@ -57,8 +59,8 @@ export class LokaliseClient {
     this.locales.forEach(locale => {
       saveJsonToFile(
         dist,
-        `${this.config.prefix || ''}${locale.language}.json`,
-        locale.translations,
+        `${prefix || ''}${locale.language}.json`,
+        locale.getTranslations(useFlat),
       );
       logMessage(`Translations were saved ${locale.language}`, 'success');
     });
@@ -70,6 +72,8 @@ export class LokaliseClient {
   }
 
   private async fetchProject({ prefix, id, ...shared }: ProjectConfig) {
+    const { delimiter } = this.config;
+
     const response: {
       bundle_url: string;
       project_id: string;
@@ -106,6 +110,10 @@ export class LokaliseClient {
       locales.forEach(locale => locale.addPrefixToKeys(prefix));
     }
 
+    if (delimiter) {
+      locales.forEach(locale => (locale.delimiter = delimiter));
+    }
+
     locales.forEach(locale => {
       this.addLocale(locale);
     });
@@ -115,7 +123,7 @@ export class LokaliseClient {
     const oldLocale = this.getLocale(locale.language);
 
     if (oldLocale) {
-      oldLocale.addTranslations(locale.translations);
+      oldLocale.addTranslations(locale.getTranslations());
     } else {
       this.locales.push(locale);
     }

@@ -44,6 +44,7 @@
     "@lokalise/node-api": "^4.0.0",
     "commander": "^5.0.0",
     "decompress": "^4.2.1",
+    "deepmerge": "^4.2.2",
     "flat": "^5.0.0",
     "tslib": "^2.0.0"
   }
