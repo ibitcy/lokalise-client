@@ -24,6 +24,7 @@ interface ProjectConfig extends Omit<DownloadFileParams, 'format'> {
 
 interface DeclarationConfig {
   dist: string;
+  delimiter?: string;
 }
 
 export class LokaliseClient {
@@ -66,7 +67,11 @@ export class LokaliseClient {
     });
 
     if (declaration) {
-      saveFile(declaration.dist, 'translations.ts', this.locales[0].getEnum());
+      saveFile(
+        declaration.dist,
+        'translations.ts',
+        this.locales[0].getEnum(declaration.delimiter),
+      );
       logMessage(`Declaration was saved`, 'success');
     }
   }
