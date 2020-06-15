@@ -1,6 +1,7 @@
 {
   "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
-    "array-type": false
+    "array-type": false,
+    "no-console": [true, "log"]
   }
 }

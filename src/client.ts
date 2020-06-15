@@ -1,94 +1,140 @@
-import { getProjectStrings, IGetProjectStringsOptions } from './api/strings';
-import { Locale } from './locale';
-import { Project } from './project';
-import { mergeMaps, Omit, unique } from './utils';
+import { DownloadFileParams, LokaliseApi } from '@lokalise/node-api';
 
-export interface IConfig {
+import { fetchLocales } from './api/files';
+import { Locale } from './locale';
+import { logMessage, removeDirectory, saveFile, saveJsonToFile } from './utils';
+
+interface Config {
+  dist: string;
+  projects: ReadonlyArray<ProjectConfig>;
   token: string;
+
+  clean?: boolean;
+  declaration?: DeclarationConfig;
+  delimiter?: string;
+  prefix?: string;
+  useFlat?: boolean;
 }
 
-export type TFetchProjectOptions = Omit<IGetProjectStringsOptions, 'api_token'>;
+interface ProjectConfig extends Omit<DownloadFileParams, 'format'> {
+  id: string;
+
+  prefix?: string;
+}
+
+interface DeclarationConfig {
+  dist: string;
+  delimiter?: string;
+}
 
 export class LokaliseClient {
-  public static mergeProjects(
-    projectList: Project[],
-    newProjectId: string
-  ): Project {
-    let projectListLanguages: string[] = [];
-    const newProjectLocales: Locale[] = [];
+  private readonly api: LokaliseApi;
+  private readonly config: Config;
+  private locales: Locale[] = [];
 
-    projectList.forEach(project => {
-      projectListLanguages = projectListLanguages.concat(project.languages);
+  public constructor(config: Config) {
+    this.api = new LokaliseApi({
+      apiKey: config.token,
     });
 
-    projectListLanguages = unique(projectListLanguages);
-
-    projectListLanguages.forEach(language => {
-      let translations = new Map<string, string>();
-
-      projectList.forEach(project => {
-        translations = mergeMaps([
-          translations,
-          project.getTranslations(language)
-        ]);
-      });
-
-      newProjectLocales.push(new Locale(language, translations));
-    });
-
-    return new Project(newProjectId, newProjectLocales);
-  }
-
-  private readonly config: IConfig;
-
-  public constructor(config: IConfig) {
     this.config = config;
   }
 
-  public fetchProject(options: TFetchProjectOptions): Promise<Project> {
-    return getProjectStrings({
-      ...options,
-      api_token: this.config.token
-    }).then(strings => {
-      const locales: Locale[] = [];
+  public async fetchTranslations() {
+    const { clean, declaration, dist, prefix, useFlat } = this.config;
 
-      if (strings) {
-        const languages = Object.keys(strings);
+    try {
+      await Promise.all(
+        this.config.projects.map(projectConfig =>
+          this.fetchProject(projectConfig),
+        ),
+      );
+    } catch (error) {
+      logMessage(error, 'error');
+    }
 
-        languages.forEach(language => {
-          const languageTranslations = strings[language];
+    if (clean) {
+      removeDirectory(dist);
+    }
 
-          if (languageTranslations) {
-            const translations = new Map<string, string>();
+    this.locales.forEach(locale => {
+      saveJsonToFile(
+        dist,
+        `${prefix || ''}${locale.language}.json`,
+        locale.getTranslations(useFlat),
+      );
+      logMessage(`Translations were saved ${locale.language}. Translations count: ${locale.getTranslationsCount()}`, 'success');
+    });
 
-            languageTranslations.forEach(item => {
-              translations.set(item.key, item.translation);
-            });
+    if (declaration) {
+      saveFile(
+        declaration.dist,
+        'translations.ts',
+        this.locales[0].getEnum(declaration.delimiter),
+      );
+      logMessage(`Declaration file was saved`, 'success');
+    }
+  }
 
-            locales.push(new Locale(language, translations));
-          }
-        });
+  private async fetchProject({ prefix, id, ...shared }: ProjectConfig) {
+    const { delimiter } = this.config;
+
+    const response: {
+      bundle_url: string;
+      project_id: string;
+    } = await this.api.files.download(id, {
+      bundle_structure: '%LANG_ISO%',
+      export_empty_as: 'base',
+      format: 'json',
+      indentation: '2sp',
+      original_filenames: false,
+      placeholder_format: 'icu',
+      plural_format: 'icu',
+      ...shared,
+    });
+
+    const locales = await fetchLocales(response.bundle_url);
+
+    const hasAlreadyFetchedProject = this.locales.length > 0;
+
+    if (hasAlreadyFetchedProject) {
+      const existedLanguages = this.locales.map(locale => locale.language);
+
+      if (existedLanguages.length !== locales.length) {
+        logMessage(`Projects have different languages`, 'warning');
       }
 
-      return new Project(options.id, locales);
+      locales.forEach(locale => {
+        if (!existedLanguages.includes(locale.language)) {
+          logMessage(`Projects have different languages`, 'warning');
+        }
+      });
+    }
+
+    if (prefix) {
+      locales.forEach(locale => locale.addPrefixToKeys(prefix));
+    }
+
+    if (delimiter) {
+      locales.forEach(locale => (locale.delimiter = delimiter));
+    }
+
+    locales.forEach(locale => {
+      this.addLocale(locale);
     });
   }
 
-  public fetchProjects(options: TFetchProjectOptions[]): Promise<Project[]> {
-    const projects: Project[] = [];
+  private addLocale(locale: Locale) {
+    const oldLocale = this.getLocale(locale.language);
 
-    const addProject = (index: number): Promise<Project[]> => {
-      return this.fetchProject(options[index]).then(project => {
-        projects.push(project);
+    if (oldLocale) {
+      oldLocale.addTranslations(locale.getTranslations());
+    } else {
+      this.locales.push(locale);
+    }
+  }
 
-        if (index < options.length - 1) {
-          return addProject(index + 1);
-        }
-
-        return projects;
-      });
-    };
-
-    return addProject(0);
+  private getLocale(language: string): Locale | undefined {
+    return this.locales.find(locale => locale.language === language);
   }
 }

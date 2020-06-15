@@ -1,8 +1,0 @@
-{
-  "moduleFileExtensions": ["ts", "js"],
-  "notify": true,
-  "transform": {
-    "^.+\\.ts$": "ts-jest"
-  },
-  "testMatch": ["<rootDir>/src/**/__tests__/**/*.test.(ts|tsx|js)"]
-}

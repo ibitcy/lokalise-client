@@ -1,15 +1,16 @@
 {
   "name": "lokalise-client",
-  "version": "0.7.0",
+  "version": "1.0.6",
   "description": "Client for lokalise.co",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc --declaration",
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
-    "preversion": "npm run lint && npm run test && npm run build",
-    "start": "node dist/index.js",
-    "test": "jest --config ./jest.config.json --no-cache --detectOpenHandles"
+    "preversion": "npm run lint && npm run build"
+  },
+  "engines": {
+    "node": ">=10"
   },
   "bin": {
     "translations": "./bin/index.js"
@@ -32,17 +33,19 @@
   },
   "homepage": "https://github.com/ibitcy/lokalise-client#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.0",
-    "@types/request": "^2.47.0",
+    "@types/decompress": "^4.2.3",
+    "@types/flat": "^5.0.1",
     "husky": "^4.2.1",
-    "jest": "^26.0.1",
-    "ts-jest": "^26.1.0",
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.12.0",
     "typescript": "^3.0.0"
   },
   "dependencies": {
+    "@lokalise/node-api": "^4.0.0",
     "commander": "^5.0.0",
-    "request": "^2.85.0"
+    "decompress": "^4.2.1",
+    "deepmerge": "^4.2.2",
+    "flat": "^5.0.0",
+    "tslib": "^2.0.0"
   }
 }
