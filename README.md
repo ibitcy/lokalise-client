@@ -3,48 +3,55 @@
 [![build status](https://badgen.net/travis/ibitcy/lokalise-client?icon=travis)](https://travis-ci.org/ibitcy/lokalise-client)
 [![npm downloads](https://badgen.net/npm/dt/lokalise-client?icon=npm&color=green)](https://www.npmjs.com/package/lokalise-client)
 
-Easy fetch your translations from lokalise.co:
-1. Install `npm i lokalise-client --save-dev` or `yarn add lokalise-client --dev`
-2. Create configuration file `translations.json`
-3. In your `package.json` file add command `"fetch-translations": "translations fetch --path ./translations.json"`
-4. Run command `npm run fetch-translations`
+Easy fetch your translations from lokalise.co.
 
-### Basic configuration `translations.json`
+## How to install
+
+```sh
+npm i lokalise-client --save-dev
+```
+
+or
+
+```sh
+yarn add lokalise-client --dev
+```
+
+## Configuration
+
+Add `translations.json` file in root of your project. Basic example:
+
 
 ```json
 {
-  "clean": true,
   "dist": "./src/locale/",
-  "prefix": "locale.",
   "token": "%token%",
   "projects": [
     {
       "id": "%project_id%"
     }
-  ],
-  "enum": {
-    "dist": "./src/types/"
-  }
-}
-```
-
-### Fetch several projects
-
-```json
-{
-  "clean": true,
-  "dist": "./src/locale/",
-  "prefix": "locale.",
-  "token": "%token%",
-  "projects": [
-    {
-      "id": "%project_id%",
-      "prefix": "__PROJECT_1__"
-    },
-    {
-      "id": "%another_project_id%",
-      "prefix": "__PROJECT_2__"
-    }
   ]
 }
 ```
+
+## Fetch translations
+
+In your `package.json` file add command `"fetch-translations": "translations fetch"`.
+Run command `npm run fetch-translations`.
+
+## Additional options
+
+If you want to save translations files with some prefix, add `prefix` param.
+
+If you want to clean directory with translations each time, set `clean` param to `true`.
+
+If you want to save your translations as flat object, set `useFlat` to `true` and define `delimiter` param.
+
+If you want to save declaration file for your translations, define `declaration` param:
+```json
+"declaration": {
+  "dist": "src/models"
+}
+```
+
+Also you can extend project params by [official lokalise api](https://app.lokalise.com/api2docs/curl/#transition-download-files-post).
