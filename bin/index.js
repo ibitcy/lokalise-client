@@ -11,25 +11,18 @@ program
   .option('-P, --path <path>', 'Path to configuration file');
 
 program.command('fetch').action((env, options) => {
-  if (!program.path) {
-    logError(
-      'Path to configuration file is required param! Add --path parameter!',
-    );
-    return;
-  }
-
-  let config;
-
   try {
-    config = JSON.parse(fs.readFileSync(path.resolve(program.path), 'utf8'));
+    const pathToConfigFile = program.path || 'translations.json';
+
+    const config = JSON.parse(
+      fs.readFileSync(path.resolve(process.cwd(), pathToConfigFile), 'utf8'),
+    );
+
+    const client = new LokaliseClient(config);
+    client.fetchTranslations();
   } catch (error) {
     logError(error.message);
-    return;
   }
-
-  const client = new LokaliseClient(config);
-
-  client.fetchTranslations();
 });
 
 program.parse(process.argv);
