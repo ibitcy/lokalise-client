@@ -24,7 +24,8 @@ interface ProjectConfig extends Omit<DownloadFileParams, 'format'> {
 
 interface DeclarationConfig {
   dist: string;
-  delimiter?: string;
+
+  transformKey?(path: string[]): string;
 }
 
 export class LokaliseClient {
@@ -63,14 +64,19 @@ export class LokaliseClient {
         `${prefix || ''}${locale.language}.json`,
         locale.getTranslations(useFlat),
       );
-      logMessage(`Translations were saved ${locale.language}. Translations count: ${locale.getTranslationsCount()}`, 'success');
+      logMessage(
+        `Translations were saved ${
+          locale.language
+        }. Translations count: ${locale.getTranslationsCount()}`,
+        'success',
+      );
     });
 
     if (declaration) {
       saveFile(
         declaration.dist,
         'translations.ts',
-        this.locales[0].getEnum(declaration.delimiter),
+        this.locales[0].getEnum(declaration.transformKey),
       );
       logMessage(`Declaration file was saved`, 'success');
     }
@@ -106,7 +112,10 @@ export class LokaliseClient {
 
       locales.forEach(locale => {
         if (!existedLanguages.includes(locale.language)) {
-          logMessage(`Projects have different languages ${locale.language}`, 'warning');
+          logMessage(
+            `Projects have different languages ${locale.language}`,
+            'warning',
+          );
         }
       });
     }

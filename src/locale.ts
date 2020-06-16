@@ -42,7 +42,9 @@ export class Locale {
     return this._translations;
   }
 
-  public getEnum(enumDelimiter = '_'): string {
+  public getEnum(
+    transformKey: (path: string[]) => string = path => path.join('_'),
+  ): string {
     let result = '';
 
     result += `export enum Translations {\n`;
@@ -50,7 +52,7 @@ export class Locale {
     const pathList = getObjectPathList(this._translations);
 
     pathList.forEach(path => {
-      result += `\t${path.join(enumDelimiter)} = '${path.join(
+      result += `\t${transformKey(path.slice())} = '${path.join(
         this.delimiter,
       )}',\n`;
     });
@@ -63,7 +65,7 @@ export class Locale {
   public getTranslationsCount(): number {
     return Object.keys(this.getTranslations(true)).length;
   }
- }
+}
 
 function getObjectPathList(target: Record<string, unknown>): string[][] {
   const result: string[][] = [];
