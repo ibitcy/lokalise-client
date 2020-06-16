@@ -21,20 +21,26 @@ yarn add lokalise-client --dev
 
 ## Configuration
 
-Add `translations.json` file in root of your project. Basic example:
+Create `config` directory in root of your project.
+
+Add `default.json` in `config` directory. Basic example:
 
 
 ```json
 {
-  "dist": "./src/locale/",
-  "token": "%token%",
-  "projects": [
-    {
-      "id": "%project_id%"
-    }
-  ]
+  "translations": {
+    "dist": "./src/locale/",
+    "token": "%token%",
+    "projects": [
+      {
+        "id": "%project_id%"
+      }
+    ]
+  }
 }
 ```
+
+Instead of `json` you can use [other](https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-formats) file format.
 
 You can define several projects. Also you can extend project params by [official lokalise api](https://app.lokalise.com/api2docs/curl/#transition-download-files-post).
 

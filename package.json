@@ -7,7 +7,8 @@
   "scripts": {
     "build": "rm -rf dist && tsc --declaration",
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
-    "preversion": "npm run lint && npm run build"
+    "preversion": "npm run lint && npm run build",
+    "translations": "node bin/index.js fetch"
   },
   "engines": {
     "node": ">=10"
@@ -43,9 +44,11 @@
   "dependencies": {
     "@lokalise/node-api": "^4.0.0",
     "commander": "^5.0.0",
+    "config": "^3.3.1",
     "decompress": "^4.2.1",
     "deepmerge": "^4.2.2",
     "flat": "^5.0.0",
+    "ts-node": "^8.10.2",
     "tslib": "^2.0.0"
   }
 }

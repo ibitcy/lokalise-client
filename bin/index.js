@@ -2,6 +2,7 @@
 
 const { LokaliseClient } = require('../dist/client.js');
 var pjson = require('../package.json');
+const config = require('config');
 const program = require('commander');
 const fs = require('fs');
 const path = require('path');
@@ -10,20 +11,18 @@ program
   .version(pjson.version)
   .option('-P, --path <path>', 'Path to configuration file');
 
-program.command('fetch').action((env, options) => {
-  try {
-    const pathToConfigFile = program.path || 'translations.json';
-
-    const config = JSON.parse(
-      fs.readFileSync(path.resolve(process.cwd(), pathToConfigFile), 'utf8'),
-    );
-
-    const client = new LokaliseClient(config);
-    client.fetchTranslations();
-  } catch (error) {
-    logError(error.message);
-  }
-});
+program
+  .command('fetch')
+  .description('Fetch your translations')
+  .action((env, options) => {
+    try {
+      const configuration = config.get('translations');
+      const client = new LokaliseClient(configuration);
+      client.fetchTranslations();
+    } catch (error) {
+      logError(error.message);
+    }
+  });
 
 program.parse(process.argv);
 
