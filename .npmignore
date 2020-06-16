@@ -9,3 +9,5 @@ tslint.json
 jest.config.json
 .prettierrc
 .travis.yml
+config
+locale
