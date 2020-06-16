@@ -7,9 +7,7 @@ const program = require('commander');
 const fs = require('fs');
 const path = require('path');
 
-program
-  .version(pjson.version)
-  .option('-P, --path <path>', 'Path to configuration file');
+program.version(pjson.version);
 
 program
   .command('fetch')
