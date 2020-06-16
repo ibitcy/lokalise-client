@@ -106,7 +106,7 @@ export class LokaliseClient {
 
       locales.forEach(locale => {
         if (!existedLanguages.includes(locale.language)) {
-          logMessage(`Projects have different languages`, 'warning');
+          logMessage(`Projects have different languages ${locale.language}`, 'warning');
         }
       });
     }
