@@ -54,6 +54,11 @@ export class LokaliseClient {
       logMessage(error, 'error');
     }
 
+    if (this.locales.length === 0) {
+      logMessage('Fetching translations was failed', 'error');
+      return;
+    }
+
     if (clean) {
       removeDirectory(dist);
     }
