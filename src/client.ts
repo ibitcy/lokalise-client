@@ -101,6 +101,7 @@ export class LokaliseClient {
       original_filenames: false,
       placeholder_format: 'icu',
       plural_format: 'icu',
+      replace_breaks: false,
       ...shared,
     });
 
