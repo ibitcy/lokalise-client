@@ -42,7 +42,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@lokalise/node-api": "^4.0.0",
+    "@lokalise/node-api": "^5.0.0",
     "commander": "^5.0.0",
     "config": "^3.3.1",
     "decompress": "^4.2.1",
