@@ -51,11 +51,13 @@ export class LokaliseClient {
         ),
       );
     } catch (error) {
-      logMessage(error, 'error');
+      logMessage('Fetching translations was failed', 'error');
+      console.error(error);
+      return;
     }
 
     if (this.locales.length === 0) {
-      logMessage('Fetching translations was failed', 'error');
+      logMessage('Translations are empty', 'error');
       return;
     }
 
