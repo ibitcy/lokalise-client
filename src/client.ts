@@ -1,18 +1,18 @@
-import {
+import type {
   DownloadedFileProcessDetails,
   DownloadFileParams,
   LokaliseApi,
   QueuedProcess,
 } from '@lokalise/node-api';
 
-import { fetchLocales } from './api/files.js';
-import { Locale } from './locale.js';
+import { fetchLocales } from './api/files';
+import { Locale } from './locale';
 import {
   logMessage,
   removeDirectory,
   saveFile,
   saveJsonToFile,
-} from './utils/index.js';
+} from './utils';
 
 interface Config {
   dist: string;
@@ -41,26 +41,35 @@ interface DeclarationConfig {
 const POLLING_INTERVAL = 3000;
 const PROCESS_TIMEOUT = 5 * 60 * 1000;
 
+let cachedApi: LokaliseApi | null = null;
+async function getApi(apiKey: string): Promise<LokaliseApi> {
+  if (cachedApi) return cachedApi;
+  // Use native dynamic import to load ESM from CommonJS without TS transpiling to require()
+  // eslint-disable-next-line
+  const dynamicImport = new Function('spec', 'return import(spec)');
+  const mod = await dynamicImport('@lokalise/node-api');
+  const ApiCtor = (mod as any).LokaliseApi || (mod as any).default?.LokaliseApi;
+  cachedApi = new ApiCtor({ apiKey });
+  return cachedApi as unknown as LokaliseApi;
+}
+
 export class LokaliseClient {
-  private readonly api: LokaliseApi;
   private readonly config: Config;
   private locales: Locale[] = [];
 
   public constructor(config: Config) {
-    this.api = new LokaliseApi({
-      apiKey: config.token,
-    });
-
     this.config = config;
   }
 
   public async fetchTranslations() {
-    const { clean, declaration, dist, prefix, useFlat } = this.config;
+    const { clean, declaration, dist, prefix, useFlat, token } = this.config;
+
+    const api = await getApi(token);
 
     try {
       await Promise.all(
         this.config.projects.map(projectConfig =>
-          this.fetchProject(projectConfig),
+          this.fetchProject(api, projectConfig),
         ),
       );
     } catch (error) {
@@ -102,12 +111,12 @@ export class LokaliseClient {
     }
   }
 
-  private async fetchProject({ prefix, id, ...shared }: ProjectConfig) {
+  private async fetchProject(api: LokaliseApi, { prefix, id, ...shared }: ProjectConfig) {
     const { delimiter } = this.config;
 
     const response: {
       process_id: string;
-    } = await this.api.files().async_download(id, {
+    } = await api.files().async_download(id, {
       bundle_structure: '%LANG_ISO%',
       export_empty_as: 'base',
       format: 'json',
@@ -123,7 +132,7 @@ export class LokaliseClient {
     let processInfo: QueuedProcess;
 
     while (true) {
-      processInfo = await this.api
+      processInfo = await api
         .queuedProcesses()
         .get(response.process_id, { project_id: id });
 

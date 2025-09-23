@@ -1,12 +1,9 @@
 #! /usr/bin/env node
 
-import { Command } from 'commander';
-import config from 'config';
-import { createRequire } from 'module';
-import { LokaliseClient } from '../dist/client.js';
-
-const require = createRequire(import.meta.url);
+const { Command } = require('commander');
+const config = require('config');
 const pjson = require('../package.json');
+const { LokaliseClient } = require('../dist/client.js');
 
 const program = new Command();
 program.version(pjson.version);

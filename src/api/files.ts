@@ -2,8 +2,8 @@ import decompress, { File } from 'decompress';
 import { IncomingMessage } from 'http';
 import https from 'https';
 
-import { Locale } from '../locale.js';
-import { logMessage } from '../utils/index.js';
+import { Locale } from '../locale';
+import { logMessage } from '../utils';
 
 export async function fetchLocales(url: string): Promise<Locale[]> {
   const response = await getZipFile(url);
