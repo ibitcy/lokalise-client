@@ -10,7 +10,8 @@
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "preversion": "npm run lint && npm run build",
     "translations": "node bin/index.js fetch",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "prepare": "yarn build"
   },
   "files": [
     "dist",
