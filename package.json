@@ -54,6 +54,7 @@
     "config": "^3.3.1",
     "decompress": "^4.2.1",
     "deepmerge": "^4.2.2",
+    "esbuild-register": "^3.6.0",
     "flat": "^5.0.0",
     "tslib": "^2.0.0",
     "typescript": "^5.9.2"

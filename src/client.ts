@@ -45,7 +45,7 @@ let cachedApi: LokaliseApi | null = null;
 async function getApi(apiKey: string): Promise<LokaliseApi> {
   if (cachedApi) return cachedApi;
   // Use native dynamic import to load ESM from CommonJS without TS transpiling to require()
-  // eslint-disable-next-line
+  // tslint:disable-next-line:function-constructor
   const dynamicImport = new Function('spec', 'return import(spec)');
   const mod = await dynamicImport('@lokalise/node-api');
   const ApiCtor = (mod as any).LokaliseApi || (mod as any).default?.LokaliseApi;
