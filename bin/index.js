@@ -1,18 +1,20 @@
 #! /usr/bin/env node
 
-const { LokaliseClient } = require('../dist/client.js');
-var pjson = require('../package.json');
-const config = require('config');
-const program = require('commander');
-const fs = require('fs');
-const path = require('path');
+import { Command } from 'commander';
+import config from 'config';
+import { createRequire } from 'module';
+import { LokaliseClient } from '../dist/client.js';
 
+const require = createRequire(import.meta.url);
+const pjson = require('../package.json');
+
+const program = new Command();
 program.version(pjson.version);
 
 program
   .command('fetch')
   .description('Fetch your translations')
-  .action((env, options) => {
+  .action(() => {
     try {
       const configuration = config.get('translations');
       const client = new LokaliseClient(configuration);

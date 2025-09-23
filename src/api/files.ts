@@ -2,8 +2,8 @@ import decompress, { File } from 'decompress';
 import { IncomingMessage } from 'http';
 import https from 'https';
 
-import { Locale } from '../locale';
-import { logMessage } from '../utils';
+import { Locale } from '../locale.js';
+import { logMessage } from '../utils/index.js';
 
 export async function fetchLocales(url: string): Promise<Locale[]> {
   const response = await getZipFile(url);
@@ -52,6 +52,6 @@ function mapFileToLocale(file: File): Locale | undefined {
     return new Locale(file.path, JSON.parse(file.data.toString('utf8')));
   } catch (error) {
     logMessage(file.path, 'error');
-    logMessage(error, 'error');
+    logMessage(String(error), 'error');
   }
 }

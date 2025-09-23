@@ -1,8 +1,18 @@
-import { DownloadFileParams, LokaliseApi } from '@lokalise/node-api';
+import {
+  DownloadedFileProcessDetails,
+  DownloadFileParams,
+  LokaliseApi,
+  QueuedProcess,
+} from '@lokalise/node-api';
 
-import { fetchLocales } from './api/files';
-import { Locale } from './locale';
-import { logMessage, removeDirectory, saveFile, saveJsonToFile } from './utils';
+import { fetchLocales } from './api/files.js';
+import { Locale } from './locale.js';
+import {
+  logMessage,
+  removeDirectory,
+  saveFile,
+  saveJsonToFile,
+} from './utils/index.js';
 
 interface Config {
   dist: string;
@@ -27,6 +37,9 @@ interface DeclarationConfig {
 
   transformKey?(path: string[]): string;
 }
+
+const POLLING_INTERVAL = 3000;
+const PROCESS_TIMEOUT = 5 * 60 * 1000;
 
 export class LokaliseClient {
   private readonly api: LokaliseApi;
@@ -93,9 +106,8 @@ export class LokaliseClient {
     const { delimiter } = this.config;
 
     const response: {
-      bundle_url: string;
-      project_id: string;
-    } = await this.api.files.download(id, {
+      process_id: string;
+    } = await this.api.files().async_download(id, {
       bundle_structure: '%LANG_ISO%',
       export_empty_as: 'base',
       format: 'json',
@@ -107,7 +119,32 @@ export class LokaliseClient {
       ...shared,
     });
 
-    const locales = await fetchLocales(response.bundle_url);
+    const startTime = Date.now();
+    let processInfo: QueuedProcess;
+
+    while (true) {
+      processInfo = await this.api
+        .queuedProcesses()
+        .get(response.process_id, { project_id: id });
+
+      if (processInfo.status === 'finished') {
+        break;
+      }
+
+      if (Date.now() - startTime > PROCESS_TIMEOUT) {
+        throw new Error(
+          'Process did not finish within the timeout period: ' +
+            PROCESS_TIMEOUT +
+            'ms',
+        );
+      }
+
+      await new Promise(resolve => setTimeout(resolve, POLLING_INTERVAL));
+    }
+
+    const locales = await fetchLocales(
+      (processInfo.details as DownloadedFileProcessDetails).download_url,
+    );
 
     const hasAlreadyFetchedProject = this.locales.length > 0;
 

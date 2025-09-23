@@ -1,14 +1,16 @@
 {
   "name": "lokalise-client",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Client for lokalise.co",
   "main": "./dist/index.js",
+  "type": "module",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc --declaration",
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "preversion": "npm run lint && npm run build",
-    "translations": "node bin/index.js fetch"
+    "translations": "node bin/index.js fetch",
+    "dev:fetch": "tsx bin/index.dev.mjs fetch"
   },
   "engines": {
     "node": ">=10"
@@ -39,10 +41,11 @@
     "husky": "^4.2.1",
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.12.0",
-    "typescript": "^4.0.2"
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@lokalise/node-api": "^5.0.0",
+    "@lokalise/node-api": "^15.0.0",
     "commander": "^6.1.0",
     "config": "^3.3.1",
     "decompress": "^4.2.1",
