@@ -10,8 +10,12 @@
     "lint": "node_modules/tslint/bin/tslint \"src/**/*.ts\" \"src/**/*.tsx\" --project ./tsconfig.json",
     "preversion": "npm run lint && npm run build",
     "translations": "node bin/index.js fetch",
-    "dev:fetch": "tsx bin/index.dev.mjs fetch"
+    "prepublishOnly": "yarn build"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "engines": {
     "node": ">=10"
   },
