@@ -51,7 +51,7 @@
   "dependencies": {
     "@lokalise/node-api": "^15.0.0",
     "commander": "^6.1.0",
-    "config": "^3.3.1",
+    "config": "^4.4.1",
     "decompress": "^4.2.1",
     "deepmerge": "^4.2.2",
     "esbuild-register": "^3.6.0",
